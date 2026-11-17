@@ -10,11 +10,11 @@ condition implements that different payoff matrix.
 
 Local setup draft, prompt version `setup-v0-table`. This is a runnable adapter
 implementation and Nix registration, not a completed experiment or an upstream
-accepted package. At commit c0a68db, the packaged Nix checks passed: 14 pytest tests including
-real event_capture, plus a completed mock smoke with 54 records passing
-reps-runner verification (schemas, projection, producer audit, results and seeds).
-Wick executed the build; Slick independently read the Nix derivation logs. The
-original 625a249 smoke failed seed verification; c0a68db fixes that mismatch.
+accepted package. At commit 51727d8, the packaged Nix checks passed: 16 pytest tests including
+real event_capture, plus two completed mock smokes (run_seed and provider_random),
+each with 54 records passing reps-runner verification. Wick executed the build;
+Slick independently read all three Nix derivation logs. The original 625a249
+smoke failed seed verification; c0a68db fixed that mismatch.
 The secrets scan had zero known credential values, so it does not establish
 coverage of actual runtime credentials. Real-provider calls remain untested.
 The event receiver worked inside Wick's Nix sandbox; that does not establish
@@ -101,7 +101,8 @@ Freeze prose wording and the exact payoff conditions; decide how many independen
 pairs, which models, and whether forecasts/messages are enabled. Run the built
 mock smoke, inspect and verify its store, then conduct a small authorized provider
 smoke. A local branch is not a hosted fork, upstream merge, or a job on someone
-else's machines. Set a publication remote only after choosing its owner; exclude
+else's machines. Ricky has chosen his GitHub account; an authenticated publication route is still
+needed. Exclude
 credentials and private review snapshots from the contribution.
 
 ## Provider sampling policy
@@ -116,11 +117,10 @@ checks seed equality only for requests containing that field. Observations recor
 null sampling seeds in provider_random mode, not fictitious independent seeds.
 This is an explicit loss of seeded provider replay, not proof of independent
 sampling: provider caching, determinism and temperature still matter. No live
-provider behavior has been tested. Both policies need packaged checks on this
-revision; the successful c0a68db check covers the previous run_seed version only.
+provider behavior has been tested. Both policies passed packaged checks on 51727d8.
 
 The first provider_random implementation (066b5cf) omitted its Nix parameter
 declaration: local tests passed but the named launcher rejected that option.
-The manifest now declares sampling and the packaged checks include a second
-smoke with provider_random. Both new packaged checks must pass before this
-revision is treated as verified.
+After adding that declaration, the default smoke still omitted its required
+explicit sampling binding. Both issues are fixed in 51727d8; a regression check
+requires the smoke fixture to bind every Params field.

@@ -15,7 +15,8 @@ installed interpreter; it did not sync/install an environment.
 Private prompt-document/comment snapshots are outside this checkout. The prompt
 implementation remains explicitly provisional. Ricky approved using his own GitHub account. An authenticated publication
 route, contribution remote and final research conditions are still needed. No remote fork, push or PR
-has been created. Packaged mock verification passed on c0a68db in Wick’s build environment:
-14 pytest tests and 54 verified smoke events. Slick independently read the Nix
-derivation logs. No real-provider smoke has run. Shared provider seeds may
-correlate identical requests; sampling design remains unresolved for science runs.
+has been created. Packaged mock verification passed on 51727d8 in Wick’s build environment:
+16 pytest tests and two 54-record verified smokes, covering run_seed and
+provider_random. Slick independently read all three Nix derivation logs.
+No real-provider smoke has run. provider_random omits the provider seed; it does
+not establish independent draws. Sampling design still needs a scientific choice.
