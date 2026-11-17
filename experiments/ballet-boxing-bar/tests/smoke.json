@@ -1,0 +1,7 @@
+{
+  "game": "coordination", "model_a": "mock/model", "model_b": "mock/model",
+  "trials": 2, "wording": 1, "labels": "ballet_boxing",
+  "partner": "same_model_same_prompt", "order": "shared_random",
+  "include_bar": true, "reward_a": 10, "reward_b": 10, "bar_reward": 5,
+  "communication": true, "forecasts": true, "temperature": 0.0, "max_tokens": 256
+}
