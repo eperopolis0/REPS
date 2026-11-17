@@ -116,3 +116,9 @@ This is an explicit loss of seeded provider replay, not proof of independent
 sampling: provider caching, determinism and temperature still matter. No live
 provider behavior has been tested. Both policies need packaged checks on this
 revision; the successful c0a68db check covers the previous run_seed version only.
+
+The first provider_random implementation (066b5cf) omitted its Nix parameter
+declaration: local tests passed but the named launcher rejected that option.
+The manifest now declares sampling and the packaged checks include a second
+smoke with provider_random. Both new packaged checks must pass before this
+revision is treated as verified.

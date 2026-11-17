@@ -17,7 +17,7 @@ in {
       game = param (enum [ "coordination" "anti_coordination" "stag_hunt" ]) { description = "Payoff rule; all players use the same rule from their own perspective."; initial = "coordination"; };
       model_a = param llm { description = "Player 0 model; mock/model is offline."; initial = "mock/model"; };
       model_b = param llm { description = "Player 1 model; must match player 0 for same-model framing."; initial = "mock/model"; };
-      trials = param int { description = "Independent one-shot pairs, each with fresh conversations."; initial = 2; };
+      trials = param int { description = "One-shot pairs with fresh conversations; provider draws are not guaranteed independent."; initial = 2; };
       wording = param int { description = "Introduction wording variant: 1, 2 or 3. Setup-v0 table wording is provisional."; initial = 1; };
       labels = param (enum [ "neutral" "ballet_boxing" ]) { description = "A/B versus Ballet/Boxing labels."; initial = "ballet_boxing"; };
       partner = param (enum [ "same_model_same_prompt" "another_ai" ]) { description = "Truthful initial partner description; separate calls, not a cloned internal model state."; initial = "same_model_same_prompt"; };
@@ -28,6 +28,7 @@ in {
       bar_reward = param int { description = "Outside-option points regardless of partner action; integer framing is explicit."; initial = 5; };
       communication = param bool { description = "One barriered exchange of short messages before final choices."; initial = false; };
       forecasts = param bool { description = "Full partner-choice distribution before, and if messages enabled after, exchange."; initial = false; };
+      sampling = param (enum [ "run_seed" "provider_random" ]) { description = "Use the run seed for provider calls, or omit it; neither mode guarantees independent draws."; initial = "run_seed"; };
       temperature = param float { description = "Sampling temperature; null leaves backend default."; nullable = true; initial = 0.0; };
       max_tokens = param int { description = "Completion token cap per call."; initial = 256; };
     };
