@@ -10,13 +10,15 @@ condition implements that different payoff matrix.
 
 Local setup draft, prompt version `setup-v0-table`. This is a runnable adapter
 implementation and Nix registration, not a completed experiment or an upstream
-accepted package. Thirteen scoring, parsing, isolation and schema unit checks have
-passed using an existing Python environment. Wick reported 13 packaged pytest checks passed at commit 625a249, but the
-registered smoke failed run verification on per-call seeds. The seed fix has
-local regression coverage; packaged re-verification and real-provider calls
-remain pending. The event receiver
-fixture in upstream REPS currently allocates its socket directory under `/tmp`;
-that must be writable in the execution environment.
+accepted package. At commit c0a68db, the packaged Nix checks passed: 14 pytest tests including
+real event_capture, plus a completed mock smoke with 54 records passing
+reps-runner verification (schemas, projection, producer audit, results and seeds).
+Wick executed the build; Slick independently read the Nix derivation logs. The
+original 625a249 smoke failed seed verification; c0a68db fixes that mismatch.
+The secrets scan had zero known credential values, so it does not establish
+coverage of actual runtime credentials. Real-provider calls remain untested.
+The event receiver worked inside Wick's Nix sandbox; that does not establish
+this seat's ability to launch the same build or access another machine.
 
 The table prompts are a **new provisional variant**, not a verbatim transcription
 of an approved prose prompt set. Do not treat the three short introduction
@@ -63,7 +65,7 @@ A nominal token cap does not bound spend across all retries: the common REPS
 client controls transport retries. Review budget and provider support before a
 real-model run.
 
-## Build and run (not yet executed here)
+## Build and run (packaged mock checks verified; real providers pending)
 
 From the fork root, with the existing Nix infrastructure available:
 

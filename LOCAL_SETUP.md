@@ -13,7 +13,9 @@ installed and no Nix store build or model requests were performed during setup.
 installed interpreter; it did not sync/install an environment.
 
 Private prompt-document/comment snapshots are outside this checkout. The prompt
-implementation remains explicitly provisional. A GitHub fork owner, contribution
-remote and final research conditions are still needed. No remote fork, push or PR
-has been created. Full packaged verification remains to be run in an authorized
-build/runtime environment.
+implementation remains explicitly provisional. Ricky approved using his own GitHub account. An authenticated publication
+route, contribution remote and final research conditions are still needed. No remote fork, push or PR
+has been created. Packaged mock verification passed on c0a68db in Wick’s build environment:
+14 pytest tests and 54 verified smoke events. Slick independently read the Nix
+derivation logs. No real-provider smoke has run. Shared provider seeds may
+correlate identical requests; sampling design remains unresolved for science runs.
