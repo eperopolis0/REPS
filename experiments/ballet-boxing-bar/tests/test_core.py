@@ -95,6 +95,25 @@ class OrchestrationTests(unittest.TestCase):
         self.assertEqual([t['sampling_seeds'] for t in trials], [[37,37]] * 3)
         self.assertEqual([t['order_seed'] for t in trials], [37,38,39])
 
+    def test_provider_random_omits_request_seed(self):
+        from reps_experiment.llm import ChatClient
+        captured, records = [], []
+        def factory(model, **kwargs):
+            client = ChatClient(model, **kwargs)
+            # Exercise the real _create normalization without socket transport.
+            def mock_create(request):
+                captured.append(copy.deepcopy(request))
+                return SimpleNamespace(choices=[SimpleNamespace(message=SimpleNamespace(content='{"choice":"Ballet"}'))])
+            client._mock_create = mock_create
+            return client
+        with patch.dict(os.environ, {'REPS_SEED':'37'}), patch('ballet_boxing_bar.main.emit', side_effect=records.append):
+            run(params(trials=2, communication=False, forecasts=False, sampling='provider_random'), client_factory=factory)
+        self.assertEqual(len(captured), 4)
+        self.assertTrue(all('seed' not in request for request in captured))
+        trials = [e.data for e in records if getattr(e, 'kind', None) and e.data['phase']=='trial']
+        self.assertEqual([t['sampling_seeds'] for t in trials], [[None,None]] * 2)
+        self.assertEqual([t['order_seed'] for t in trials], [37,38])
+
     def test_messages_barrier_and_no_choice_leak(self):
         result, records, calls = self.execute(params(trials=1))
         sends=[(a,m) for a,m in calls if m[-1]['content'].startswith('Write')]

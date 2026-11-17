@@ -41,7 +41,7 @@ before scientific runs. No comprehension check is injected into a scored game.
   states which one is in use. Separate model instances can truthfully receive the
   same initial prompt. This does not claim an internal-state fork or identical
   random draws. Same-model/same-prompt framing requires equal model IDs and shared
-  order; all calls use the same run seed, as required by the upstream verifier, and
+  order; by default, all calls use the same run seed, matching the upstream verifier, and
   that seed is recorded. Identical prompts with identical provider seeds may
   yield identical or correlated outputs. Fresh conversations do not establish
   independent random draws; this limitation matters for symmetry-breaking claims.
@@ -103,3 +103,16 @@ mock smoke, inspect and verify its store, then conduct a small authorized provid
 smoke. A local branch is not a hosted fork, upstream merge, or a job on someone
 else's machines. Set a publication remote only after choosing its owner; exclude
 credentials and private review snapshots from the contribution.
+
+## Provider sampling policy
+
+`sampling=run_seed` remains the backward-compatible default and uses the run
+seed on every request. `sampling=provider_random` explicitly omits the provider
+seed, while retaining the run seed for reproducible option ordering. The local
+upstream ChatClient leaves seed absent when its seed is None, and the verifier
+checks seed equality only for requests containing that field. Observations record
+null sampling seeds in provider_random mode, not fictitious independent seeds.
+This is an explicit loss of seeded provider replay, not proof of independent
+sampling: provider caching, determinism and temperature still matter. No live
+provider behavior has been tested. Both policies need packaged checks on this
+revision; the successful c0a68db check covers the previous run_seed version only.

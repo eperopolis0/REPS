@@ -15,6 +15,7 @@ def run(p: Params, client_factory=ChatClient) -> dict:
     emit(Observation(data={"phase": "config", "params": p.model_dump(mode="json"),
                            "seed": seed, "prompt_version": "setup-v0-table",
                            "mock": [p.model_a.startswith("mock/"), p.model_b.startswith("mock/")]}))
+    provider_seed = seed if p.sampling == "run_seed" else None
     totals = dict.fromkeys(RESULT_NAMES, 0)
     for trial in range(p.trials):
         option_orders = orders(p, seed + trial)
@@ -30,10 +31,10 @@ def run(p: Params, client_factory=ChatClient) -> dict:
                 return json.dumps({"choice": choice})
             clients.append(client_factory(model, agent=f"player_{player}",
                            metadata={"trial": trial}, temperature=p.temperature,
-                           seed=seed, max_tokens=p.max_tokens,
+                           seed=provider_seed, max_tokens=p.max_tokens,
                            mock_responder=mock_reply))
         emit(Observation(data={"phase": "trial", "trial": trial, "order": option_orders,
-                               "sampling_seeds": [seed, seed], "order_seed": seed + trial}))
+                               "sampling_seeds": [provider_seed, provider_seed], "order_seed": seed + trial}))
         def ask(player, instruction):
             conversation = conversations[player]
             conversation.append({"role": "user", "content": instruction})

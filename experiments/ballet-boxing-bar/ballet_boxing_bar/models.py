@@ -18,6 +18,7 @@ class Params(BaseModel):
     bar_reward: Annotated[int, Field(ge=0)]
     communication: bool
     forecasts: bool
+    sampling: Literal["run_seed", "provider_random"] = "run_seed"
     temperature: float | None
     max_tokens: Annotated[int, Field(ge=1)]
 
