@@ -10,9 +10,11 @@ condition implements that different payoff matrix.
 
 Local setup draft, prompt version `setup-v0-table`. This is a runnable adapter
 implementation and Nix registration, not a completed experiment or an upstream
-accepted package. Twelve scoring, parsing, isolation and schema unit checks have
-passed using an existing Python environment. The Nix build, registered-launcher
-smoke and real-provider calls have not yet been validated. The event receiver
+accepted package. Thirteen scoring, parsing, isolation and schema unit checks have
+passed using an existing Python environment. Wick reported 13 packaged pytest checks passed at commit 625a249, but the
+registered smoke failed run verification on per-call seeds. The seed fix has
+local regression coverage; packaged re-verification and real-provider calls
+remain pending. The event receiver
 fixture in upstream REPS currently allocates its socket directory under `/tmp`;
 that must be writable in the execution environment.
 
@@ -37,7 +39,11 @@ before scientific runs. No comprehension check is injected into a scored game.
   states which one is in use. Separate model instances can truthfully receive the
   same initial prompt. This does not claim an internal-state fork or identical
   random draws. Same-model/same-prompt framing requires equal model IDs and shared
-  order; backend sampling seeds are separate and recorded.
+  order; all calls use the same run seed, as required by the upstream verifier, and
+  that seed is recorded. Identical prompts with identical provider seeds may
+  yield identical or correlated outputs. Fresh conversations do not establish
+  independent random draws; this limitation matters for symmetry-breaking claims.
+  Order randomization uses a separate recorded seed derived from run seed + trial.
 - Optional one-message exchange: neither recipient receives the other's message
   before both have written. Final actions are not disclosed to either player.
   Requests may execute sequentially, but information remains simultaneous.

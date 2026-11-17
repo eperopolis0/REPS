@@ -79,6 +79,22 @@ class OrchestrationTests(unittest.TestCase):
             adapter.validate_json(event.model_dump_json(),strict=True)
         return result,records,calls
 
+    def test_all_clients_use_run_seed_and_report_actual_seeds(self):
+        captured, records = [], []
+        def factory(model, **kwargs):
+            captured.append(kwargs)
+            def create(**request):
+                return SimpleNamespace(choices=[SimpleNamespace(message=SimpleNamespace(content='{"choice":"Ballet"}'))])
+            return SimpleNamespace(model_id=model, chat=SimpleNamespace(completions=SimpleNamespace(create=create)))
+        with patch.dict(os.environ, {'REPS_SEED':'37'}), patch('ballet_boxing_bar.main.emit', side_effect=records.append):
+            run(params(trials=3, communication=False, forecasts=False), client_factory=factory)
+        # REPS verify.py requires call.request.seed == run.start.seed, including
+        # the second player and subsequent trials (the original smoke failure).
+        self.assertEqual([c['seed'] for c in captured], [37] * 6)
+        trials = [e.data for e in records if getattr(e, 'kind', None) and e.data['phase']=='trial']
+        self.assertEqual([t['sampling_seeds'] for t in trials], [[37,37]] * 3)
+        self.assertEqual([t['order_seed'] for t in trials], [37,38,39])
+
     def test_messages_barrier_and_no_choice_leak(self):
         result, records, calls = self.execute(params(trials=1))
         sends=[(a,m) for a,m in calls if m[-1]['content'].startswith('Write')]

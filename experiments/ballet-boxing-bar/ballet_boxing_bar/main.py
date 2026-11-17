@@ -30,10 +30,10 @@ def run(p: Params, client_factory=ChatClient) -> dict:
                 return json.dumps({"choice": choice})
             clients.append(client_factory(model, agent=f"player_{player}",
                            metadata={"trial": trial}, temperature=p.temperature,
-                           seed=seed + 2 * trial + player, max_tokens=p.max_tokens,
+                           seed=seed, max_tokens=p.max_tokens,
                            mock_responder=mock_reply))
         emit(Observation(data={"phase": "trial", "trial": trial, "order": option_orders,
-                               "sampling_seeds": [seed + 2 * trial, seed + 2 * trial + 1]}))
+                               "sampling_seeds": [seed, seed], "order_seed": seed + trial}))
         def ask(player, instruction):
             conversation = conversations[player]
             conversation.append({"role": "user", "content": instruction})
