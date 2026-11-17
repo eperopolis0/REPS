@@ -16,6 +16,11 @@ def params(**updates):
     return Params.model_validate(BASE | updates)
 
 class CoreTests(unittest.TestCase):
+    def test_smoke_binds_every_parameter_explicitly(self):
+        # The non-interactive launcher does not fill manifest initials or
+        # Pydantic defaults. Catch drift before a packaged smoke is launched.
+        self.assertEqual(set(BASE), set(Params.model_fields))
+
     def test_all_nine_coordination_cells(self):
         p = params()
         expected = [[10, 0, 0], [0, 10, 0], [5, 5, 5]]

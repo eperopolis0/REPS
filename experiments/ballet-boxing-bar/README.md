@@ -78,7 +78,7 @@ nix run .#ballet-boxing-bar -- \
   --set partner=same_model_same_prompt --set order=shared_random \
   --set include_bar=true --set reward_a=10 --set reward_b=10 --set bar_reward=5 \
   --set communication=true --set forecasts=true \
-  --set temperature=0.0 --set max_tokens=256 \
+  --set sampling=run_seed --set temperature=0.0 --set max_tokens=256 \
   --seed 0 --json --non-interactive
 ```
 
@@ -106,8 +106,10 @@ credentials and private review snapshots from the contribution.
 
 ## Provider sampling policy
 
-`sampling=run_seed` remains the backward-compatible default and uses the run
-seed on every request. `sampling=provider_random` explicitly omits the provider
+The Python default and manifest initial for sampling are `run_seed`, which uses the run
+seed on every request. Non-interactive launcher conditions must still bind
+`sampling` explicitly; manifest initials are not filled in there.
+`sampling=provider_random` explicitly omits the provider
 seed, while retaining the run seed for reproducible option ordering. The local
 upstream ChatClient leaves seed absent when its seed is None, and the verifier
 checks seed equality only for requests containing that field. Observations record
