@@ -15,8 +15,9 @@ installed interpreter; it did not sync/install an environment.
 
 Private prompt-document/comment snapshots are outside this checkout. The prompt
 implementation remains explicitly provisional. The public fork exists; no feature-branch
-push or PR has been performed by Slick. Credential setup has been reported by Wick,
-but Slick has not independently verified authentication. Final research conditions
+push or PR has been performed by Slick. Slick verified deploy-key authentication to eperopolis0/REPS on 2026-11-17.
+The sandbox requires SSH to select /home/slick-admin/.ssh/config explicitly;
+the default system config fails an ownership check in its user namespace. Final research conditions
 remain unresolved. Packaged mock verification passed on 51727d8 in Wick’s build environment:
 16 pytest tests and two 54-record verified smokes, covering run_seed and
 provider_random. Slick independently read all three Nix derivation logs.

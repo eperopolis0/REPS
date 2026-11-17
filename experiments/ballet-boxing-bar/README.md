@@ -8,7 +8,7 @@ condition implements that different payoff matrix.
 
 ## Status
 
-Local setup draft, prompt version `setup-v0-table`. This is a runnable adapter
+Draft package, prompt version `setup-v0-table`. This is a runnable adapter
 implementation and Nix registration, not a completed experiment or an upstream
 accepted package. At commit 51727d8, the packaged Nix checks passed: 16 pytest tests including
 real event_capture, plus two completed mock smokes (run_seed and provider_random),
@@ -95,14 +95,14 @@ python -m unittest discover -s tests -p test_core.py -v
 The separate `test_events.py` requires the REPS `event_capture` fixture and a
 working socket environment. Unit mocks do not certify transport or run storage.
 
-## Before tomorrow's main batch
+## Before a scientific batch
 
 Freeze prose wording and the exact payoff conditions; decide how many independent
 pairs, which models, and whether forecasts/messages are enabled. Run the built
 mock smoke, inspect and verify its store, then conduct a small authorized provider
 smoke. A local branch is not a hosted fork, upstream merge, or a job on someone
-else's machines. Ricky has chosen his GitHub account; an authenticated publication route is still
-needed. Exclude
+else's machines. The contribution target is the feature branch on eperopolis0/REPS;
+publication there does not imply upstream acceptance. Exclude
 credentials and private review snapshots from the contribution.
 
 ## Provider sampling policy
@@ -124,3 +124,7 @@ declaration: local tests passed but the named launcher rejected that option.
 After adding that declaration, the default smoke still omitted its required
 explicit sampling binding. Both issues are fixed in 51727d8; a regression check
 requires the smoke fixture to bind every Params field.
+
+After rebasing onto upstream 4abd8cc (TMPDIR support), all 31 affected source
+tests passed: the event-socket suite and this package’s tests. This used an
+existing Python environment with checkout sources, not a rebuilt Nix package.
